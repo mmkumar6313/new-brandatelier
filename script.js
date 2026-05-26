@@ -55,32 +55,73 @@ class Particle {
 
     update() {
 
-        this.lastPos.x = this.pos.x;
-        this.lastPos.y = this.pos.y;
+       let edgeJitter = 8;
 
-        this.rotation +=
-            this.rotationVel * deltaTime;
+if (this.pos.x < buffer) {
 
-        let gravityScale = map(
-            this.densityFactor,
-            0,
-            5,
-            1,
-            0.7
+    this.pos.x =
+        buffer +
+        random(-edgeJitter, edgeJitter);
+
+    this.vel.x =
+        abs(this.vel.x) *
+        bounce;
+
+    this.vel.y += random(-1, 1);
+}
+
+if (this.pos.x > width - buffer) {
+
+    this.pos.x =
+        width -
+        buffer +
+        random(
+            -edgeJitter,
+            edgeJitter
         );
 
-        this.acc.add(
-            p5.Vector.mult(
-                gravity,
-                4 * gravityScale
-            )
+    this.vel.x =
+        -abs(this.vel.x) *
+        bounce;
+
+    this.vel.y += random(-1, 1);
+}
+
+if (this.pos.y < buffer) {
+
+    this.pos.y =
+        buffer +
+        random(
+            -edgeJitter,
+            edgeJitter
         );
 
-       let d = dist(
-    this.pos.x,
-    this.pos.y,
-    mouseX,
-    mouseY
+    this.vel.y =
+        abs(this.vel.y) *
+        bounce;
+
+    this.vel.x += random(-1, 1);
+}
+
+if (
+    this.pos.y >
+    height - buffer
+) {
+
+    this.pos.y =
+        height -
+        buffer +
+        random(
+            -edgeJitter,
+            edgeJitter
+        );
+
+    this.vel.y =
+        -abs(this.vel.y) *
+        bounce;
+
+    this.vel.x += random(-1, 1);
+}
 );
 
 let maxDist = 250;
