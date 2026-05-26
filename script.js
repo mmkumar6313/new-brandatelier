@@ -53,187 +53,78 @@ class Particle {
         ]);
     }
 
-    update() {
+   update() {
+    this.lastPos.x = this.pos.x;
+    this.lastPos.y = this.pos.y;
 
-       let edgeJitter = 8;
+    this.rotation += this.rotationVel * deltaTime;
 
-if (this.pos.x < buffer) {
+    let gravityScale = map(this.densityFactor, 0, 5, 1, 0.7);
 
-    this.pos.x =
-        buffer +
-        random(-edgeJitter, edgeJitter);
+    this.acc.add(p5.Vector.mult(gravity, 4 * gravityScale));
 
-    this.vel.x =
-        abs(this.vel.x) *
-        bounce;
+    let d = dist(this.pos.x, this.pos.y, mouseX, mouseY);
 
-    this.vel.y += random(-1, 1);
-}
+    let maxDist = 250;
 
-if (this.pos.x > width - buffer) {
+    if (d < maxDist) {
+      let mouseVel = createVector(mouseX - mousePrevX, mouseY - mousePrevY);
 
-    this.pos.x =
-        width -
-        buffer +
-        random(
-            -edgeJitter,
-            edgeJitter
-        );
+      let densityScale = map(this.densityFactor, 0, 5, 1, 0.85);
 
-    this.vel.x =
-        -abs(this.vel.x) *
-        bounce;
+      let force = mouseVel.copy().mult(10 * densityScale);
 
-    this.vel.y += random(-1, 1);
-}
+      let strength = pow(map(d, 0, maxDist, 1, 0), 1.75);
 
-if (this.pos.y < buffer) {
+      force.mult(strength);
 
-    this.pos.y =
-        buffer +
-        random(
-            -edgeJitter,
-            edgeJitter
-        );
+      this.acc.add(force);
 
-    this.vel.y =
-        abs(this.vel.y) *
-        bounce;
-
-    this.vel.x += random(-1, 1);
-}
-
-if (
-    this.pos.y >
-    height - buffer
-) {
-
-    this.pos.y =
-        height -
-        buffer +
-        random(
-            -edgeJitter,
-            edgeJitter
-        );
-
-    this.vel.y =
-        -abs(this.vel.y) *
-        bounce;
-
-    this.vel.x += random(-1, 1);
-}
-);
-
-let maxDist = 250;
-
-if (d < maxDist) {
-
-    let mouseVel = createVector(
-        mouseX - mousePrevX,
-        mouseY - mousePrevY
-    );
-
-    let densityScale = map(
-        this.densityFactor,
-        0,
-        5,
-        1,
-        0.85
-    );
-
-    let force = mouseVel
-        .copy()
-        .mult(10 * densityScale);
-
-    let strength = pow(
-        map(d, 0, maxDist, 1, 0),
-        1.75
-    );
-
-    force.mult(strength);
-
-    this.acc.add(force);
-
-    this.rotationVel +=
-        mouseVel.mag() *
-        0.01 *
-        random(-1, 1);
-}
-
-        let dampingFactor = map(
-            this.densityFactor,
-            0,
-            5,
-            1,
-            1
-        );
-
-        this.vel.add(
-            p5.Vector.mult(
-                this.acc,
-                deltaTime *
-                15.0 *
-                dampingFactor
-            )
-        );
-
-        if (
-            this.pos.y >
-            height - particleSize * 2
-        ) {
-
-            this.vel.mult(0.92);
-            this.vel.x *= 0.94;
-            this.rotationVel *= 0.95;
-
-        } else {
-
-            this.vel.mult(0.989);
-            this.rotationVel *= 0.99;
-        }
-
-        this.pos.add(
-            p5.Vector.mult(
-                this.vel,
-                deltaTime * 11.5
-            )
-        );
-
-        let bounce = 0.45;
-        let buffer = particleSize;
-
-        if (this.pos.x < buffer) {
-            this.pos.x = buffer;
-            this.vel.x =
-                abs(this.vel.x) * bounce;
-        }
-
-        if (this.pos.x > width - buffer) {
-            this.pos.x = width - buffer;
-            this.vel.x =
-                -abs(this.vel.x) * bounce;
-        }
-
-        if (this.pos.y < buffer) {
-            this.pos.y = buffer;
-            this.vel.y =
-                abs(this.vel.y) * bounce;
-        }
-
-        if (
-            this.pos.y >
-            height - buffer
-        ) {
-            this.pos.y =
-                height - buffer;
-
-            this.vel.y =
-                -abs(this.vel.y) * bounce;
-        }
-
-        this.acc.mult(0);
-        this.densityFactor = 0;
+      this.rotationVel += mouseVel.mag() * 0.01 * random(-1, 1);
     }
+
+    let dampingFactor = map(this.densityFactor, 0, 5, 1, 1);
+
+    this.vel.add(p5.Vector.mult(this.acc, deltaTime * 15.0 * dampingFactor));
+
+    if (this.pos.y > height - particleSize * 2) {
+      this.vel.mult(0.92);
+      this.vel.x *= 0.94;
+      this.rotationVel *= 0.95;
+    } else {
+      this.vel.mult(0.989);
+      this.rotationVel *= 0.99;
+    }
+
+    this.pos.add(p5.Vector.mult(this.vel, deltaTime * 11.5));
+
+    let bounce = 0.45;
+    let buffer = particleSize;
+
+    if (this.pos.x < buffer) {
+      this.pos.x = buffer;
+      this.vel.x = abs(this.vel.x) * bounce;
+    }
+
+    if (this.pos.x > width - buffer) {
+      this.pos.x = width - buffer;
+      this.vel.x = -abs(this.vel.x) * bounce;
+    }
+
+    if (this.pos.y < buffer) {
+      this.pos.y = buffer;
+      this.vel.y = abs(this.vel.y) * bounce;
+    }
+
+    if (this.pos.y > height - buffer) {
+      this.pos.y = height - buffer;
+
+      this.vel.y = -abs(this.vel.y) * bounce;
+    }
+
+    this.acc.mult(0);
+    this.densityFactor = 0;
+  }
 
 draw() {
 
