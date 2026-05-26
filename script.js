@@ -101,26 +101,73 @@ class Particle {
     let bounce = 0.45;
     let buffer = particleSize;
 
-    if (this.pos.x < buffer) {
-      this.pos.x = buffer;
-      this.vel.x = abs(this.vel.x) * bounce;
-    }
+    let edgeJitter = 8;
 
-    if (this.pos.x > width - buffer) {
-      this.pos.x = width - buffer;
-      this.vel.x = -abs(this.vel.x) * bounce;
-    }
+if (this.pos.x < buffer) {
 
-    if (this.pos.y < buffer) {
-      this.pos.y = buffer;
-      this.vel.y = abs(this.vel.y) * bounce;
-    }
+    this.pos.x =
+        buffer +
+        random(-edgeJitter, edgeJitter);
 
-    if (this.pos.y > height - buffer) {
-      this.pos.y = height - buffer;
+    this.vel.x =
+        abs(this.vel.x) *
+        bounce;
 
-      this.vel.y = -abs(this.vel.y) * bounce;
-    }
+    this.vel.y += random(-1, 1);
+}
+
+if (this.pos.x > width - buffer) {
+
+    this.pos.x =
+        width -
+        buffer +
+        random(
+            -edgeJitter,
+            edgeJitter
+        );
+
+    this.vel.x =
+        -abs(this.vel.x) *
+        bounce;
+
+    this.vel.y += random(-1, 1);
+}
+
+if (this.pos.y < buffer) {
+
+    this.pos.y =
+        buffer +
+        random(
+            -edgeJitter,
+            edgeJitter
+        );
+
+    this.vel.y =
+        abs(this.vel.y) *
+        bounce;
+
+    this.vel.x += random(-1, 1);
+}
+
+if (
+    this.pos.y >
+    height - buffer
+) {
+
+    this.pos.y =
+        height -
+        buffer +
+        random(
+            -edgeJitter,
+            edgeJitter
+        );
+
+    this.vel.y =
+        -abs(this.vel.y) *
+        bounce;
+
+    this.vel.x += random(-1, 1);
+}
 
     this.acc.mult(0);
     this.densityFactor = 0;
