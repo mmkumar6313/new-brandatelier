@@ -55,7 +55,7 @@ class Particle {
         this.pos.add(p5.Vector.mult(this.vel, deltaTime * 11.5));
         let bounce = 0.45;
         let buffer = particleSize;
-        let edgeJitter = 8;
+        let edgeJitter = 15;
         let edgePush = 0.25;
         if (this.pos.x < buffer) {
             this.pos.x = buffer;
