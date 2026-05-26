@@ -24,6 +24,7 @@ class Particle {
         //     "circle"
         // ]);
         this.icon = random(["icon1", "icon2"]);
+        this.edgeOffset = random(-18, 18);
     }
     update() {
         this.lastPos.x = this.pos.x;
@@ -53,29 +54,24 @@ class Particle {
             this.rotationVel *= 0.99;
         }
         this.pos.add(p5.Vector.mult(this.vel, deltaTime * 11.5));
-        let bounce = 0.45;
+       let bounce = 0.45;
         let buffer = particleSize;
-        let edgeJitter = 15;
-        let edgePush = 0.25;
+        let edgeVariation = this.edgeOffset;
         if (this.pos.x < buffer) {
-            this.pos.x = buffer;
+            this.pos.x = buffer + edgeVariation;
             this.vel.x = abs(this.vel.x) * bounce;
-            this.vel.y += sin(this.pos.y * 0.05) * edgePush;
         }
         if (this.pos.x > width - buffer) {
-            this.pos.x = width - buffer;
+            this.pos.x = width - buffer + edgeVariation;
             this.vel.x = -abs(this.vel.x) * bounce;
-            this.vel.y += sin(this.pos.y * 0.05) * edgePush;
         }
         if (this.pos.y < buffer) {
-            this.pos.y = buffer;
+            this.pos.y = buffer + edgeVariation;
             this.vel.y = abs(this.vel.y) * bounce;
-            this.vel.x += cos(this.pos.x * 0.05) * edgePush;
         }
         if (this.pos.y > height - buffer) {
-            this.pos.y = height - buffer;
+            this.pos.y = height - buffer + edgeVariation;
             this.vel.y = -abs(this.vel.y) * bounce;
-            this.vel.x += cos(this.pos.x * 0.05) * edgePush;
         }
         this.acc.mult(0);
         this.densityFactor = 0;
