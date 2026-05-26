@@ -5,7 +5,7 @@ let icon2;
 
 
 
-const particleCount = 200;
+const particleCount = 300;
 const particleSize = 12;
 const spacing = particleSize * 15;
 
