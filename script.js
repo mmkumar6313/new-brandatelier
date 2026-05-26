@@ -222,7 +222,7 @@ draw() {
     if (this.icon === "icon1") {
 
         currentIcon = icon1;
-        size = 60;
+        size = 25;
 
     } else {
 
